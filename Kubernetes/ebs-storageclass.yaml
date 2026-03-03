@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-gp3
+provisioner: ebs.csi.aws.com        # ← AWS EBS CSI driver
+parameters:
+  type: gp3                          # ← gp3 is the best general purpose SSD
+  fsType: ext4                       # ← Linux filesystem
+  encrypted: "true"                  # ← Encrypt data at rest!
+reclaimPolicy: Delete                # ← Delete EBS when PVC is deleted
+volumeBindingMode: WaitForFirstConsumer   # ← Create EBS in same AZ as pod
+allowVolumeExpansion: true           # ← Allow resizing later

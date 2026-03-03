@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-ebs-pod
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ["sh", "-c"]
+    args:
+    - |
+      echo "=== Previous data ==="
+      cat /data/log.txt 2>/dev/null || echo "(no previous data)"
+      echo ""
+      echo "Written by $(hostname) at $(date)" >> /data/log.txt
+      echo "=== Current data ==="
+      cat /data/log.txt
+      sleep 3600
+    volumeMounts:
+    - name: ebs-vol
+      mountPath: /data
+  volumes:
+  - name: ebs-vol
+    persistentVolumeClaim:
+      claimName: ebs-static-pvc
